@@ -85,38 +85,39 @@ Resources:
     Properties:
       RoleArn: !GetAtt CodePipelineRole.Arn
       Stages:
-      - Name: Source
-        Actions:
-        - InputArtifacts: []
-          Name: Source
-          ActionTypeId:
-            Category: Source
-            Owner: ThirdParty
-            Version: '1'
-            Provider: GitHub
-          OutputArtifacts:
-          - Name: SourceOutput
-          Configuration:
-            Owner: 'christemple'
-            Repo: 'serverless-experiment'
-            Branch: 'master'
-            OAuthToken: 'thisneedsupdated'
-          RunOrder: 1
-      - Name: Deploy
-        Actions:
-        - Name: Artifact
-          ActionTypeId:
-            Category: Build
-            Owner: AWS
-            Version: '1'
-            Provider: CodeBuild
-          InputArtifacts:
-          - Name: SourceOutput
-          OutputArtifacts:
-          - Name: DeployOutput
-          Configuration:
-            ProjectName: 'serverless-experiment'
-          RunOrder: 1
+        - Name: Source
+          Actions:
+            - InputArtifacts: []
+              Name: Source
+              ActionTypeId:
+                Category: Source
+                Owner: ThirdParty
+                Version: '1'
+                Provider: GitHub
+              OutputArtifacts:
+                - Name: SourceOutput
+              Configuration:
+                Owner: 'christemple'
+                Repo: 'serverless-experiment'
+                Branch: 'master'
+                OAuthToken: 'thisneedsupdated'
+              RunOrder: 1
+
+        - Name: Build
+          Actions:
+            - Name: Build App
+              InputArtifacts:
+                - Name: SourceOutput
+              ActionTypeId:
+                Category: Build
+                Owner: AWS
+                Version: '1'
+                Provider: CodeBuild
+              OutputArtifacts:
+                - Name: BuildOutput
+              Configuration:
+                ProjectName: serverless
+              RunOrder: 1
       ArtifactStore:
         Type: S3
         Location: !Ref AppPipelineArtifactStore
