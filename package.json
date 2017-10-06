@@ -1,0 +1,16 @@
+{
+  "name": "serverless-experiment",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "package": "aws cloudformation package --template-file ./template.yaml --s3-bucket serverless-experiment --output-template-file packaged-template.yaml",
+    "deploy": "aws cloudformation deploy --template-file ./packaged-template.yaml --stack-name serverless-experiment --capabilities CAPABILITY_IAM"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "aws-sdk": "^2.128.0"
+  }
+}

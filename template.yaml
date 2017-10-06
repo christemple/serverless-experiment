@@ -1,0 +1,76 @@
+AWSTemplateFormatVersion : '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Serverless app API
+Resources:
+  FirstFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: index.first
+      Runtime: nodejs6.10
+      CodeUri: ./lambdas
+      Events:
+        GetHello:
+          Type: Api
+          Properties:
+            Path: /l/first
+            Method: get
+  SecondFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: index.second
+      Runtime: nodejs6.10
+      CodeUri: ./lambdas
+      Events:
+        GetHello:
+          Type: Api
+          Properties:
+            Path: /l/second
+            Method: get
+  HelloFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: index.hello
+      Runtime: nodejs6.10
+      CodeUri: ./api
+      Events:
+        GetHello:
+          Type: Api
+          Properties:
+            Path: /api/hello
+            Method: get
+  GetFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: index.get
+      Runtime: nodejs6.10
+      CodeUri: ./api
+      Events:
+        GetResource:
+          Type: Api
+          Properties:
+            Path: /api
+            Method: get
+  PostFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: index.post
+      Runtime: nodejs6.10
+      CodeUri: ./api
+      Events:
+        PostResource:
+          Type: Api
+          Properties:
+            Path: /api
+            Method: post
+  GetAppFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: index.get
+      Runtime: nodejs6.10
+      CodeUri: ./app
+      Events:
+        GetResource:
+          Type: Api
+          Properties:
+            Path: /
+            Method: get
