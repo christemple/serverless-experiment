@@ -1,9 +1,10 @@
+const PayloadHelper = require('../lib/PayloadHelper');
 const AWS = require('aws-sdk');
 
 exports.first = (event, context, callback) => {
     const lambda = new AWS.Lambda();
     var params = {
-        FunctionName: 'second', /* required */
+        FunctionName: process.env.SECOND_FUNCTION,
         InvocationType: 'Event',
         Payload: JSON.stringify({data: ['hello', 'world']}),
     };

@@ -8,6 +8,11 @@ Resources:
       Handler: index.first
       Runtime: nodejs6.10
       CodeUri: ./lambdas
+      Policies: AWSLambdaFullAccess
+      Environment:
+        Variables:
+          SECOND_FUNCTION: !Ref SecondFunction
+          WHAT: 'hello'
       Events:
         GetHello:
           Type: Api
