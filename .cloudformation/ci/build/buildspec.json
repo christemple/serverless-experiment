@@ -1,0 +1,21 @@
+{
+  "version": 0.1,
+  "phases": {
+    "install": {
+      "commands": [
+        "npm install"
+      ]
+    },
+    "build": {
+      "commands": [
+        "npm test"
+      ]
+    }
+  },
+  "artifacts": {
+    "type": "zip",
+    "files": [
+      "package.json"
+    ]
+  }
+}

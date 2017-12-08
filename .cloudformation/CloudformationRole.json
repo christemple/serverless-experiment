@@ -1,0 +1,73 @@
+{
+  "Type": "AWS::IAM::Role",
+  "Properties": {
+    "AssumeRolePolicyDocument": {
+      "Statement": [
+        {
+          "Action": "sts:AssumeRole",
+          "Effect": "Allow",
+          "Principal": {
+            "Service": {
+              "Fn::Sub": "cloudformation.${AWS::URLSuffix}"
+            }
+          }
+        }
+      ],
+      "Version": "2012-10-17"
+    },
+    "Path": "/",
+    "Policies": [
+      {
+        "PolicyName": "RestrictedCloudFormationAccess",
+        "PolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Action": [
+                "cloudformation:CreateChangeSet"
+              ],
+              "Effect": "Allow",
+              "Resource": [
+                {
+                  "Fn::Sub": "arn:${AWS::Partition}:cloudformation:${AWS::Region}:aws:transform/Serverless-2016-10-31"
+                }
+              ]
+            },
+            {
+              "Action": [
+                "cloudformation:ExecuteChangeSet"
+              ],
+              "Effect": "Allow",
+              "Resource": [
+                "*"
+              ],
+              "Condition": {
+                "StringLike": {
+                  "cloudformation:ChangeSetName": {
+                    "Fn::Sub": "${AWS::StackName}-*"
+                  }
+                }
+              }
+            },
+            {
+              "Action": [
+                "*"
+              ],
+              "Effect": "Allow",
+              "Resource": [
+                "*"
+              ],
+              "Condition": {
+                "ForAllValues:StringLike": {
+                  "cloudformation:TemplateURL": {
+                    "Fn::Sub": "https://s3.${AWS::URLSuffix}/${PipelineArtifactStore}/*"
+                  }
+                }
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

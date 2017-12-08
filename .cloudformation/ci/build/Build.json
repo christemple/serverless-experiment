@@ -1,0 +1,29 @@
+{
+  "Type": "AWS::CodeBuild::Project",
+  "Properties": {
+    "TimeoutInMinutes": 5,
+    "ServiceRole": {
+      "Fn::GetAtt": "BuildRole.Arn"
+    },
+    "Source": {
+      "Type": "CODEPIPELINE",
+      "BuildSpec": ".cloudformation/ci/buildspec.json"
+    },
+    "Environment": {
+      "Type": "LINUX_CONTAINER",
+      "ComputeType": "BUILD_GENERAL1_SMALL",
+      "Image": "aws/codebuild/nodejs:7.0.0",
+      "EnvironmentVariables": [
+        {
+          "Name": "AWS_ACCOUNT_ID",
+          "Value": {
+            "Ref": "AWS::AccountId"
+          }
+        }
+      ]
+    },
+    "Artifacts": {
+      "Type": "CODEPIPELINE"
+    }
+  }
+}

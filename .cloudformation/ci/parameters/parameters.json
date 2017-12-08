@@ -1,0 +1,19 @@
+{
+  "GitHubToken": {
+    "Type": "String",
+    "NoEcho": true,
+    "Description": "A Github OAuth Token with public_repo or repo scope\n"
+  },
+  "Repository": {
+    "Type": "String",
+    "AllowedPattern": "^[-_a-zA-Z0-9]+/[-_a-zA-Z0-9]+$",
+    "ConstraintDescription": "Ensure you have defined a full path, including the username or\norganisation name.\n",
+    "Description": "The full name of the repository, such as \"<username>/<name>\".\n"
+  },
+  "Branch": {
+    "Type": "String",
+    "AllowedPattern": "^[-_a-zA-Z0-9]+$",
+    "ConstraintDescription": "Only alpha numeric characters, as well as \"-\" and \"_\" are allowed.\n",
+    "Description": "Branch to use from the repository.\n"
+  }
+}

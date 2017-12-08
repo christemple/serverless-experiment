@@ -1,0 +1,85 @@
+{
+  "Type": "AWS::IAM::Role",
+  "Properties": {
+    "AssumeRolePolicyDocument": {
+      "Statement": [
+        {
+          "Action": "sts:AssumeRole",
+          "Effect": "Allow",
+          "Principal": {
+            "Service": {
+              "Fn::Sub": "codepipeline.${AWS::URLSuffix}"
+            }
+          }
+        }
+      ],
+      "Version": "2012-10-17"
+    },
+    "Path": "/",
+    "Policies": [
+      {
+        "PolicyName": "CodePipelineAccess",
+        "PolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Action": [
+                "s3:*"
+              ],
+              "Effect": "Allow",
+              "Resource": [
+                {
+                  "Fn::GetAtt": "PipelineArtifactStore.Arn"
+                },
+                {
+                  "Fn::Sub": "${PipelineArtifactStore.Arn}/*"
+                }
+              ]
+            },
+            {
+              "Action": [
+                "codebuild:*"
+              ],
+              "Effect": "Allow",
+              "Resource": [
+                {
+                  "Fn::GetAtt": "Build.Arn"
+                }
+              ]
+            },
+            {
+              "Action": [
+                "cloudformation:CreateStack",
+                "cloudformation:DescribeStacks",
+                "cloudformation:DeleteStack",
+                "cloudformation:UpdateStack",
+                "cloudformation:CreateChangeSet",
+                "cloudformation:ExecuteChangeSet",
+                "cloudformation:DeleteChangeSet",
+                "cloudformation:DescribeChangeSet",
+                "cloudformation:SetStackPolicy"
+              ],
+              "Effect": "Allow",
+              "Resource": [
+                {
+                  "Fn::Sub": "arn:${AWS::Partition}:cloudformation:${AWS::Region}:${AWS::AccountId}:stack/${AWS::StackName}*/*"
+                }
+              ]
+            },
+            {
+              "Action": [
+                "iam:PassRole"
+              ],
+              "Effect": "Allow",
+              "Resource": [
+                {
+                  "Fn::GetAtt": "CloudformationRole.Arn"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

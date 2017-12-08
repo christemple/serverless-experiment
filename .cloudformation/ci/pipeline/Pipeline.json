@@ -1,0 +1,99 @@
+{
+  "Type": "AWS::CodePipeline::Pipeline",
+  "Properties": {
+    "RestartExecutionOnUpdate": false,
+    "ArtifactStore": {
+      "Location": {
+        "Ref": "PipelineArtifactStore"
+      },
+      "Type": "S3"
+    },
+    "RoleArn": { "Fn::GetAtt": "PipelineRole.Arn" },
+    "Stages": [
+      {
+        "Name": "Source",
+        "Actions": [
+          {
+            "Name": "GitHub",
+            "RunOrder": 1,
+            "ActionTypeId": {
+              "Category": "Source",
+              "Owner": "ThirdParty",
+              "Version": 1,
+              "Provider": "GitHub"
+            },
+            "OutputArtifacts": [
+              {
+                "Name": "GitHubOutput"
+              }
+            ],
+            "Configuration": {
+              "Owner": {
+                "Fn::Select": [
+                  0,
+                  {
+                    "Fn::Split": [
+                      "/",
+                      {
+                        "Ref": "Repository"
+                      }
+                    ]
+                  }
+                ]
+              },
+              "Repo": {
+                "Fn::Select": [
+                  1,
+                  {
+                    "Fn::Split": [
+                      "/",
+                      {
+                        "Ref": "Repository"
+                      }
+                    ]
+                  }
+                ]
+              },
+              "Branch": {
+                "Ref": "Branch"
+              },
+              "OAuthToken": {
+                "Ref": "GitHubToken"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "Name": "Build",
+        "Actions": [
+          {
+            "Name": "Build",
+            "RunOrder": 1,
+            "InputArtifacts": [
+              {
+                "Name": "GitHubOutput"
+              }
+            ],
+            "ActionTypeId": {
+              "Category": "Build",
+              "Owner": "AWS",
+              "Version": 1,
+              "Provider": "CodeBuild"
+            },
+            "OutputArtifacts": [
+              {
+                "Name": "BuildOutput"
+              }
+            ],
+            "Configuration": {
+              "ProjectName": {
+                "Ref": "Build"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "Type": "AWS::Logs::LogGroup",
+  "Properties": {
+    "LogGroupName": {
+      "Fn::Sub": "/aws/codebuild/${Build}"
+    },
+    "RetentionInDays": 1
+  }
+}
